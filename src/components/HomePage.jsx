@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import toast, { Toaster } from 'react-hot-toast';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
@@ -249,6 +250,7 @@ const ServiceCard = ({ service, index }) => {
 };
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -275,8 +277,15 @@ const HomePage = () => {
         toast.success("Appointment request sent successfully!");
         heroFormRef.current.reset();
         setIsHeroSubmitting(false);
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'conversion', {
+            'send_to': 'AW-16732521690/xT1WCKjEkdkaENqJ2Ko-'
+          });
+        }
+        navigate('/thank-you');
     }, (error) => {
-        toast.error("Failed to send request. Please try again or call us.");
+        console.error("EmailJS Hero Form Error:", error);
+        toast.error(`Failed: ${error.text || "Check EmailJS setup"}`);
         setIsHeroSubmitting(false);
     });
   };
@@ -295,13 +304,27 @@ const HomePage = () => {
         toast.success("Message sent successfully!");
         contactFormRef.current.reset();
         setIsContactSubmitting(false);
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'conversion', {
+            'send_to': 'AW-16732521690/xT1WCKjEkdkaENqJ2Ko-'
+          });
+        }
+        navigate('/thank-you');
     }, (error) => {
-        toast.error("Failed to send message. Please try again or call us.");
+        console.error("EmailJS Contact Form Error:", error);
+        toast.error(`Failed: ${error.text || "Check EmailJS setup"}`);
         setIsContactSubmitting(false);
     });
   };
 
   useEffect(() => {
+    // Event snippet for Home page (1) conversion page
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'conversion', {
+        'send_to': 'AW-16732521690/xT1WCKjEkdkaENqJ2Ko-'
+      });
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
