@@ -8,7 +8,11 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
-    host: 'localhost'
+    host: 'localhost',
+    watch: {
+      usePolling: true,
+      interval: 100
+    }
   },
   build: {
     outDir: 'dist',
