@@ -11,7 +11,9 @@ const trackAssessmentCTA = (condition) => {
         selectedLocation: new URLSearchParams(window.location.search).get('location') || 'general',
       });
     }
-  } catch (_) {}
+  } catch {
+    // Analytics error ignored
+  }
 };
 
 // ─── Condition-specific inline SVG icons ─────────────────────────────────────

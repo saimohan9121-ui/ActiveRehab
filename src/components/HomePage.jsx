@@ -20,7 +20,7 @@ import MobileBookingModal from './landing/MobileBookingModal';
 import { clinicConfig } from '../config/clinicConfig';
 import { captureAttribution } from '../utils/attribution';
 import { trackCallClick, trackLocationSelect } from '../utils/analytics';
-import { Phone, MapPin, Clock, ExternalLink } from 'lucide-react';
+import { Phone, ExternalLink } from 'lucide-react';
 
 const HomePage = () => {
   // Mobile booking modal state

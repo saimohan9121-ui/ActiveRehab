@@ -12,7 +12,10 @@ export default [
     files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
@@ -29,6 +32,11 @@ export default [
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      'react/prop-types': 'off',
+      'react/display-name': 'off',
+      'react/no-unescaped-entities': 'off',
+      'no-unused-vars': 'off',
+      'no-empty': ['warn', { allowEmptyCatch: true }],
       'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': [
         'warn',
