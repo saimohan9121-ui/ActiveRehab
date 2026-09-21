@@ -91,7 +91,7 @@ const CONDITIONS = [
   {
     title: 'Back Pain',
     concern: 'Back Pain',
-    image: '/images/back-pain.jpg',
+    image: '/Services Images/back pain treatment in Kompally.png',
     alt: 'Back Pain Spinal Assessment at ActiveRehab Hyderabad',
     Icon: IconSpine,
     description: 'Assessment of spinal movement, posture, joint mobility and muscular factors that may be contributing to lower or upper back discomfort.',
@@ -101,7 +101,7 @@ const CONDITIONS = [
   {
     title: 'Neck Pain',
     concern: 'Neck Pain',
-    image: '/images/neck-pain.jpg',
+    image: '/Services Images/neck pain treatment in Kondapur.png',
     alt: 'Neck Pain and Stiffness Assessment at ActiveRehab Hyderabad',
     Icon: IconNeck,
     description: 'Assessment of neck movement, muscular tension, posture and joint mobility to understand factors that may be contributing to neck stiffness or discomfort.',
@@ -111,7 +111,7 @@ const CONDITIONS = [
   {
     title: 'Sciatica & Sciatic Nerve Pain',
     concern: 'Sciatica & Sciatic Nerve Pain',
-    image: '/images/sciatica-pain.jpg',
+    image: '/Services Images/sciatica treatment in Kondapur.png',
     alt: 'Sciatica and Sciatic Nerve Pain Assessment at ActiveRehab Hyderabad',
     Icon: IconNerve,
     description: 'Assessment of lower-back and leg symptoms such as radiating pain, tingling or discomfort along the sciatic nerve pathway, with care planned according to clinical findings.',
@@ -121,7 +121,7 @@ const CONDITIONS = [
   {
     title: 'Spondylitis & Inflammatory Spine Conditions',
     concern: 'Spondylitis & Inflammatory Spine Conditions',
-    image: '/images/spondylitis-spine.jpg',
+    image: '/Services Images/spondylitis treatment in Kompally.png',
     alt: 'Spondylitis Spine Stiffness Assessment at ActiveRehab Hyderabad',
     Icon: IconSpondylitis,
     description: 'Assessment of spinal stiffness, mobility limitations, posture and functional movement in patients with inflammatory or persistent spine-related concerns.',
@@ -131,7 +131,7 @@ const CONDITIONS = [
   {
     title: 'Cervical Spondylosis & Neck Pain',
     concern: 'Cervical Spondylosis & Neck Pain',
-    image: '/images/neck-pain.jpg',
+    image: '/Services Images/cervical spondylosis treatment in Kompally.png',
     alt: 'Cervical Spondylosis and Neck Mobility Assessment at ActiveRehab Hyderabad',
     Icon: IconCervical,
     description: 'Assessment of cervical mobility, posture, stiffness and musculoskeletal function to guide an appropriate care and rehabilitation approach.',
@@ -141,7 +141,7 @@ const CONDITIONS = [
   {
     title: 'Postural Disorders & Posture-Related Pain',
     concern: 'Postural Disorders & Posture-Related Pain',
-    image: '/images/posture-correction.png',
+    image: '/Services Images/posture correction treatment in Kondapur.png',
     alt: 'Posture Analysis and Postural Disorder Assessment at ActiveRehab Hyderabad',
     Icon: IconPosture,
     description: 'Assessment of standing and sitting posture, movement patterns and muscular balance, with corrective guidance based on individual physical requirements.',
