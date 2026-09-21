@@ -110,6 +110,8 @@ function loadYouTubeIframeApi() {
 const YouTubeCard = React.memo(({
   item,
   isActive,
+  isLoaded = false,
+  onActivate,
   cardWidth,
   gapWidth,
   onPlayerStateChange,
@@ -120,8 +122,8 @@ const YouTubeCard = React.memo(({
   const playerId = `yt-embed-${item.slotKey}`;
 
   useEffect(() => {
-    // Only mount YouTube Player API on core real videos (not clones) for peak mobile performance
-    if (item.isClone) return;
+    // Only mount YouTube Player API if section is loaded and on core real videos (not clones)
+    if (item.isClone || !isLoaded) return;
 
     let isCancelled = false;
     let playerInstance = null;
@@ -158,7 +160,7 @@ const YouTubeCard = React.memo(({
         }
       }
     };
-  }, [item.isClone, playerId, item.id, item.realIdx, onPlayerStateChange, registerPlayer, unregisterPlayer]);
+  }, [item.isClone, isLoaded, playerId, item.id, item.realIdx, onPlayerStateChange, registerPlayer, unregisterPlayer]);
 
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const embedUrl = `https://www.youtube-nocookie.com/embed/${item.id}?enablejsapi=1&playsinline=1&rel=0&controls=1&modestbranding=1&origin=${encodeURIComponent(origin)}`;
@@ -208,8 +210,8 @@ const YouTubeCard = React.memo(({
         }`}
         style={{ aspectRatio: '9 / 16' }}
       >
-        {!item.isClone ? (
-          // Genuine YouTube Player IFrame for the 6 core videos
+        {!item.isClone && isLoaded ? (
+          // Genuine YouTube Player IFrame for the 6 core videos (mounted only when approaching viewport)
           <iframe
             ref={iframeRef}
             id={playerId}
@@ -221,8 +223,11 @@ const YouTubeCard = React.memo(({
             className="absolute inset-0 w-full h-full border-0 block"
           />
         ) : (
-          // Lightweight Genuine YouTube Shorts Poster for Clones (Zero memory bloat on mobile)
-          <div className="w-full h-full relative bg-black">
+          // Lightweight Genuine YouTube Shorts Poster for Clones and Deferred Initial Load
+          <div 
+            className="w-full h-full relative bg-black cursor-pointer group/thumb"
+            onClick={() => onActivate && onActivate(item.realIdx)}
+          >
             <img
               src={`https://img.youtube.com/vi/${item.id}/hqdefault.jpg`}
               alt={`ActiveRehab patient testimonial video ${item.realIdx + 1}`}
@@ -230,7 +235,7 @@ const YouTubeCard = React.memo(({
               decoding="async"
               width="340"
               height="604"
-              className="w-full h-full object-cover brightness-[0.95]"
+              className="w-full h-full object-cover brightness-[0.95] group-hover/thumb:scale-105 transition-transform duration-300"
             />
             {/* Native Shorts Pill indicator */}
             <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
@@ -243,7 +248,7 @@ const YouTubeCard = React.memo(({
             </div>
             {/* Center Red Shorts Play Icon */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-12 h-12 rounded-2xl bg-[#ff0000] text-white flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 rounded-2xl bg-[#ff0000] text-white flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform">
                 <svg className="w-6 h-6 fill-white ml-0.5" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
@@ -266,6 +271,7 @@ const PatientVideoStories = ({ selectedLocation = 'kondapur' }) => {
   const [isHovered, setIsHovered] = useState(false);
   // Default to true so auto-scroll starts reliably without waiting on observer race
   const [isSectionVisible, setIsSectionVisible] = useState(true);
+  const [hasLoadedPlayers, setHasLoadedPlayers] = useState(false);
   const [isTabHidden, setIsTabHidden] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -491,12 +497,14 @@ const PatientVideoStories = ({ selectedLocation = 'kondapur' }) => {
       (entries) => {
         entries.forEach((entry) => {
           setIsSectionVisible(entry.isIntersecting);
-          if (!entry.isIntersecting) {
+          if (entry.isIntersecting) {
+            setHasLoadedPlayers(true);
+          } else {
             pauseAllVideos();
           }
         });
       },
-      { threshold: 0.2, rootMargin: '40px 0px 40px 0px' }
+      { threshold: 0.1, rootMargin: '250px 0px 250px 0px' }
     );
 
     if (sectionRef.current) {
@@ -837,6 +845,8 @@ const PatientVideoStories = ({ selectedLocation = 'kondapur' }) => {
                 key={`yt-card-${item.slotKey}`}
                 item={item}
                 isActive={idx === currentIndex}
+                isLoaded={hasLoadedPlayers}
+                onActivate={() => setHasLoadedPlayers(true)}
                 cardWidth={cardWidth}
                 gapWidth={gapWidth}
                 onPlayerStateChange={handlePlayerStateChange}

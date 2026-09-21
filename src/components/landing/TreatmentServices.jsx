@@ -9,7 +9,7 @@ const services = [
     subtitle: "Joint Mobility & Spinal Function",
     shortDesc: "Controlled, hands-on spinal and joint adjustments designed to improve motion, relieve nerve pressure, and decrease discomfort.",
     icon: <Brain className="w-6 h-6 text-brandOrange" />,
-    image: "/images/chiropractic-adjustments.png",
+    image: "/images/chiropractic-adjustments.webp",
     mayInclude: [
       "Targeted spinal & extremity joint assessment",
       "Controlled manual mobilization & adjustments",
@@ -24,7 +24,7 @@ const services = [
     subtitle: "Active Recovery & Strengthening",
     shortDesc: "Structured physical rehabilitation therapy focused on restoring muscle strength, stabilizing vulnerable joints, and enhancing movement quality.",
     icon: <ShieldCheck className="w-6 h-6 text-brandBlue" />,
-    image: "/images/rehab-therapy.png",
+    image: "/images/rehab-therapy.webp",
     mayInclude: [
       "Functional movement & weakness screening",
       "Guided therapeutic strengthening exercises",
@@ -39,7 +39,7 @@ const services = [
     subtitle: "Spinal Alignment & Daily Habit Care",
     shortDesc: "Clinical posture analysis paired with corrective protocols to counteract postural strain from long desk hours, phone use, and slouching.",
     icon: <Activity className="w-6 h-6 text-brandOrange" />,
-    image: "/images/posture-correction.png",
+    image: "/images/posture-correction.webp",
     mayInclude: [
       "Detailed cervical, thoracic & pelvic posture assessment",
       "Ergonomic workstation and sitting advice",
@@ -54,7 +54,7 @@ const services = [
     subtitle: "Injury Recovery & Joint Conditioning",
     shortDesc: "Individualized care for sprains, muscle strains, running injuries, shoulder impingement, and joint stiffness.",
     icon: <Dumbbell className="w-6 h-6 text-brandBlue" />,
-    image: "/images/chronic-pain.jpg",
+    image: "/images/chronic-pain.webp",
     mayInclude: [
       "Biomechanical movement screening",
       "Soft-tissue mobilization & joint therapy",

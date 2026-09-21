@@ -116,7 +116,7 @@ const WhyChooseUs = () => {
               {/* Doctor Details with Real Image Thumbnail */}
               <div className="flex items-center gap-3 mt-2.5">
                 <img
-                  src="/images/doctorphoto.jpg"
+                  src="/images/doctorphoto.webp"
                   alt="Dr. Ashok P. Kota, Master of Chiropractic at ActiveRehab Hyderabad"
                   width="48"
                   height="48"

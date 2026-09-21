@@ -79,7 +79,7 @@ const HeroSection = ({
           loop
           playsInline
           preload="metadata"
-          poster="/hero side.jpg"
+          poster="/hero-poster.webp"
           disablePictureInPicture
           disableRemotePlayback
           className="w-full h-full object-cover"

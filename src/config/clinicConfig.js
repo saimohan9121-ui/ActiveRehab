@@ -18,7 +18,7 @@ export const clinicConfig = {
     experienceYears: "17+",
     experienceText: "17+ Years Experience",
     patientsTreated: "5,000+",
-    image: "/images/doctorphoto.jpg",
+    image: "/images/doctorphoto.webp",
     bio: "Dr. Ashok P. Kota is an experienced chiropractic and rehabilitation specialist in Hyderabad. Dedicated to patient-centred care, Dr. Ashok provides individual physical assessments and gentle chiropractic adjustments tailored to help patients recover from back pain, neck pain, posture issues, and joint discomfort across our Kondapur and Kompally clinics.",
     qualifications: [
       "Master of Chiropractic",
