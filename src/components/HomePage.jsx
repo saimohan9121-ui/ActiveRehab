@@ -10,6 +10,7 @@ import ConditionsGrid from './landing/ConditionsGrid';
 import WhyChooseUs from './landing/WhyChooseUs';
 import TreatmentServices from './landing/TreatmentServices';
 import TreatmentProcess from './landing/TreatmentProcess';
+import Testimonials from './landing/Testimonials';
 import FAQSection from './landing/FAQSection';
 import { defaultFaqs } from '../data/faqsData';
 import ClinicLocation from './landing/ClinicLocation';
