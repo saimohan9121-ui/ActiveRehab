@@ -227,6 +227,9 @@ const YouTubeCard = React.memo(({
               src={`https://img.youtube.com/vi/${item.id}/hqdefault.jpg`}
               alt={`ActiveRehab patient testimonial video ${item.realIdx + 1}`}
               loading="lazy"
+              decoding="async"
+              width="340"
+              height="604"
               className="w-full h-full object-cover brightness-[0.95]"
             />
             {/* Native Shorts Pill indicator */}

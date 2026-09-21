@@ -77,6 +77,9 @@ const ServiceCard = ({ service, onBookRequest }) => {
             src={service.image}
             alt={`${service.title} at ActiveRehab Hyderabad`}
             loading="lazy"
+            decoding="async"
+            width="340"
+            height="176"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />

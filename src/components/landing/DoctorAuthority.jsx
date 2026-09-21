@@ -27,9 +27,12 @@ const DoctorAuthority = ({ onBookRequest }) => {
             <div className="flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 border-brandOrange/30 shadow-md">
               <img
                 src={clinicConfig.doctor.image}
-                alt={`${clinicConfig.doctor.name} - Chiropractor in Hyderabad`}
+                alt="Dr. Ashok P. Kota, Master of Chiropractic at ActiveRehab Hyderabad"
+                width="80"
+                height="80"
                 className="w-full h-full object-cover"
-                loading="eager"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="flex-1 min-w-0">
@@ -99,8 +102,11 @@ const DoctorAuthority = ({ onBookRequest }) => {
             <div className="relative aspect-[4/5] max-w-md mx-auto rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-100">
               <img
                 src={clinicConfig.doctor.image}
-                alt={`${clinicConfig.doctor.name} - Chiropractor in Hyderabad (Kondapur & Kompally)`}
-                loading="eager"
+                alt="Dr. Ashok P. Kota, Master of Chiropractic at ActiveRehab Hyderabad"
+                loading="lazy"
+                decoding="async"
+                width="448"
+                height="560"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />

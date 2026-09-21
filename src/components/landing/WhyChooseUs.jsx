@@ -117,9 +117,12 @@ const WhyChooseUs = () => {
               <div className="flex items-center gap-3 mt-2.5">
                 <img
                   src="/images/doctorphoto.jpg"
-                  alt="Dr. Ashok P. Kota - Master of Chiropractic"
+                  alt="Dr. Ashok P. Kota, Master of Chiropractic at ActiveRehab Hyderabad"
+                  width="48"
+                  height="48"
                   className="w-12 h-12 rounded-xl object-cover border border-slate-200 shadow-xs flex-shrink-0"
                   loading="lazy"
+                  decoding="async"
                 />
                 <div>
                   <h4 className="text-sm font-black text-slate-900 leading-tight">

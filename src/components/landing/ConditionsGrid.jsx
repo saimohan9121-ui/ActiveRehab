@@ -89,60 +89,72 @@ const IconPosture = () => (
 // ─── Condition data ─────────────────────────────────────────────────────────
 const CONDITIONS = [
   {
+    id: 'back-pain',
     title: 'Back Pain',
     concern: 'Back Pain',
     image: '/Services Images/back pain treatment in Kompally.png',
-    alt: 'Back Pain Spinal Assessment at ActiveRehab Hyderabad',
+    alt: 'Back Pain Treatment in Kondapur and Back Pain Treatment in Kompally at ActiveRehab Hyderabad',
+    titleAttr: 'Back Pain Treatment in Kondapur & Kompally',
     Icon: IconSpine,
     description: 'Assessment of spinal movement, posture, joint mobility and muscular factors that may be contributing to lower or upper back discomfort.',
     tags: ['Spinal Mobility', 'Posture Assessment', 'Muscle & Joint Function'],
     isOrange: true,
   },
   {
+    id: 'neck-pain',
     title: 'Neck Pain',
     concern: 'Neck Pain',
     image: '/Services Images/neck pain treatment in Kondapur.png',
-    alt: 'Neck Pain and Stiffness Assessment at ActiveRehab Hyderabad',
+    alt: 'Neck Pain Treatment in Kondapur and Neck Pain Treatment in Kompally at ActiveRehab Hyderabad',
+    titleAttr: 'Neck Pain Treatment in Kondapur & Kompally',
     Icon: IconNeck,
     description: 'Assessment of neck movement, muscular tension, posture and joint mobility to understand factors that may be contributing to neck stiffness or discomfort.',
     tags: ['Neck Mobility', 'Posture Assessment', 'Muscle & Joint Function'],
     isOrange: false,
   },
   {
+    id: 'sciatica',
     title: 'Sciatica & Sciatic Nerve Pain',
     concern: 'Sciatica & Sciatic Nerve Pain',
     image: '/Services Images/sciatica treatment in Kondapur.png',
-    alt: 'Sciatica and Sciatic Nerve Pain Assessment at ActiveRehab Hyderabad',
+    alt: 'Sciatica Treatment in Kondapur and Sciatica Treatment in Kompally at ActiveRehab Hyderabad',
+    titleAttr: 'Sciatica Treatment in Kondapur & Kompally',
     Icon: IconNerve,
     description: 'Assessment of lower-back and leg symptoms such as radiating pain, tingling or discomfort along the sciatic nerve pathway, with care planned according to clinical findings.',
     tags: ['Nerve-Related Symptoms', 'Lower Back Mobility', 'Movement Assessment'],
     isOrange: true,
   },
   {
+    id: 'spondylitis',
     title: 'Spondylitis & Inflammatory Spine Conditions',
     concern: 'Spondylitis & Inflammatory Spine Conditions',
     image: '/Services Images/spondylitis treatment in Kompally.png',
-    alt: 'Spondylitis Spine Stiffness Assessment at ActiveRehab Hyderabad',
+    alt: 'Spondylitis Treatment in Kondapur and Spondylitis Treatment in Kompally at ActiveRehab Hyderabad',
+    titleAttr: 'Spondylitis Treatment in Kondapur & Kompally',
     Icon: IconSpondylitis,
     description: 'Assessment of spinal stiffness, mobility limitations, posture and functional movement in patients with inflammatory or persistent spine-related concerns.',
     tags: ['Spinal Mobility', 'Functional Movement', 'Posture & Stiffness'],
     isOrange: false,
   },
   {
+    id: 'cervical-spondylosis',
     title: 'Cervical Spondylosis & Neck Pain',
     concern: 'Cervical Spondylosis & Neck Pain',
     image: '/Services Images/cervical spondylosis treatment in Kompally.png',
-    alt: 'Cervical Spondylosis and Neck Mobility Assessment at ActiveRehab Hyderabad',
+    alt: 'Cervical Spondylosis Treatment in Kondapur and Cervical Spondylosis Treatment in Kompally at ActiveRehab Hyderabad',
+    titleAttr: 'Cervical Spondylosis Treatment in Kondapur & Kompally',
     Icon: IconCervical,
     description: 'Assessment of cervical mobility, posture, stiffness and musculoskeletal function to guide an appropriate care and rehabilitation approach.',
     tags: ['Cervical Mobility', 'Postural Alignment', 'Functional Movement'],
     isOrange: true,
   },
   {
+    id: 'posture-correction',
     title: 'Postural Disorders & Posture-Related Pain',
     concern: 'Postural Disorders & Posture-Related Pain',
     image: '/Services Images/posture correction treatment in Kondapur.png',
-    alt: 'Posture Analysis and Postural Disorder Assessment at ActiveRehab Hyderabad',
+    alt: 'Posture Correction Treatment in Kondapur and Posture Correction Treatment in Kompally at ActiveRehab Hyderabad',
+    titleAttr: 'Posture Correction Treatment in Kondapur & Kompally',
     Icon: IconPosture,
     description: 'Assessment of standing and sitting posture, movement patterns and muscular balance, with corrective guidance based on individual physical requirements.',
     tags: ['Posture Analysis', 'Movement Patterns', 'Muscle Balance'],
@@ -246,7 +258,7 @@ const IconBadge = ({ Icon, isOrange, size = 'lg' }) => (
 
 // ─── Desktop Card ─────────────────────────────────────────────────────────────
 const DesktopCard = ({ condition, index, onBookRequest }) => {
-  const { title, concern, image, alt, Icon, description, tags, isOrange } = condition;
+  const { id, title, concern, image, alt, titleAttr, Icon, description, tags, isOrange } = condition;
 
   const handleClick = () => {
     trackAssessmentCTA(concern);
@@ -260,7 +272,8 @@ const DesktopCard = ({ condition, index, onBookRequest }) => {
 
   return (
     <motion.article
-      className="bg-white rounded-[20px] overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col text-left group"
+      id={id}
+      className="bg-white rounded-[20px] overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col text-left group scroll-mt-24"
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
@@ -269,7 +282,13 @@ const DesktopCard = ({ condition, index, onBookRequest }) => {
       {/* Image */}
       <div className="relative overflow-hidden" style={{ height: '168px', flexShrink: 0 }}>
         <img
-          src={image} alt={alt} loading="lazy"
+          src={image}
+          alt={alt}
+          title={titleAttr}
+          loading="lazy"
+          decoding="async"
+          width="400"
+          height="168"
           className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
@@ -313,7 +332,7 @@ const DesktopCard = ({ condition, index, onBookRequest }) => {
 
 // ─── Mobile Card ──────────────────────────────────────────────────────────────
 const MobileCard = ({ condition, onBookRequest }) => {
-  const { title, concern, image, alt, Icon, description, tags, isOrange } = condition;
+  const { id, title, concern, image, alt, titleAttr, Icon, description, tags, isOrange } = condition;
 
   const handleClick = () => {
     trackAssessmentCTA(concern);
@@ -326,10 +345,22 @@ const MobileCard = ({ condition, onBookRequest }) => {
   };
 
   return (
-    <article className="bg-white rounded-[18px] overflow-hidden border border-slate-200/80 shadow-sm flex flex-col">
+    <article
+      id={`mobile-${id}`}
+      className="bg-white rounded-[18px] overflow-hidden border border-slate-200/80 shadow-sm flex flex-col scroll-mt-24"
+    >
       {/* Image */}
       <div className="relative overflow-hidden" style={{ height: '148px', flexShrink: 0 }}>
-        <img src={image} alt={alt} loading="lazy" className="w-full h-full object-cover" />
+        <img
+          src={image}
+          alt={alt}
+          title={titleAttr}
+          loading="lazy"
+          decoding="async"
+          width="360"
+          height="148"
+          className="w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
         <div className="absolute top-2.5 left-2.5">
           <IconBadge Icon={Icon} isOrange={isOrange} size="sm" />

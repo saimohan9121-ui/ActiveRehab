@@ -239,6 +239,127 @@ const ClinicLocation = ({ selectedLocation = 'kondapur', onLocationChange }) => 
           </p>
         </div>
 
+        {/* ─── Compact SEO Treatments by Clinic Block ────────────────────────── */}
+        <div className="mt-10 pt-8 border-t border-slate-200/80 text-left">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-6">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-brandBlue block mb-1">
+                Clinical Care in Hyderabad
+              </span>
+              <h3 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
+                Treatments Available at Our Hyderabad Clinics
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-lg mx-auto">
+                Explore targeted chiropractic and physical rehabilitation services offered at both our Kondapur and Kompally centres.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              {/* Kondapur Column */}
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+                <div className="flex items-center space-x-2 mb-3 pb-2 border-b border-slate-100">
+                  <MapPin className="w-4 h-4 text-brandOrange flex-shrink-0" />
+                  <h4 className="font-bold text-slate-900 text-sm sm:text-base">
+                    Kondapur Clinic
+                  </h4>
+                  <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded font-semibold ml-auto">
+                    Kondapur, Hyd
+                  </span>
+                </div>
+                <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
+                  <li>
+                    <a href="#back-pain" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Back Pain Treatment in Kondapur</span>
+                      <span className="text-brandOrange text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#neck-pain" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Neck Pain Treatment in Kondapur</span>
+                      <span className="text-brandOrange text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#sciatica" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Sciatica Treatment in Kondapur</span>
+                      <span className="text-brandOrange text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#spondylitis" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Spondylitis Treatment in Kondapur</span>
+                      <span className="text-brandOrange text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#cervical-spondylosis" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Cervical Spondylosis Treatment in Kondapur</span>
+                      <span className="text-brandOrange text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#posture-correction" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Posture Correction Treatment in Kondapur</span>
+                      <span className="text-brandOrange text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Kompally Column */}
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+                <div className="flex items-center space-x-2 mb-3 pb-2 border-b border-slate-100">
+                  <MapPin className="w-4 h-4 text-brandBlue flex-shrink-0" />
+                  <h4 className="font-bold text-slate-900 text-sm sm:text-base">
+                    Kompally Clinic
+                  </h4>
+                  <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded font-semibold ml-auto">
+                    Kompally, Hyd
+                  </span>
+                </div>
+                <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
+                  <li>
+                    <a href="#back-pain" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Back Pain Treatment in Kompally</span>
+                      <span className="text-brandBlue text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#neck-pain" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Neck Pain Treatment in Kompally</span>
+                      <span className="text-brandBlue text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#sciatica" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Sciatica Treatment in Kompally</span>
+                      <span className="text-brandBlue text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#spondylitis" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Spondylitis Treatment in Kompally</span>
+                      <span className="text-brandBlue text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#cervical-spondylosis" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Cervical Spondylosis Treatment in Kompally</span>
+                      <span className="text-brandBlue text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#posture-correction" className="hover:text-brandBlue flex items-center justify-between group py-0.5">
+                      <span className="group-hover:underline">Posture Correction Treatment in Kompally</span>
+                      <span className="text-brandBlue text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   );

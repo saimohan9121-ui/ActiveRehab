@@ -159,7 +159,9 @@ const HomePage = () => {
               <div className="flex items-center space-x-2">
                 <img
                   src="/images/logo.png"
-                  alt="ActiveRehab Centre Logo"
+                  alt="ActiveRehab Centre"
+                  width="180"
+                  height="48"
                   className="h-10 sm:h-12 w-auto max-w-[200px] object-contain bg-white p-1.5 rounded-xl shadow-sm flex-shrink-0"
                 />
               </div>

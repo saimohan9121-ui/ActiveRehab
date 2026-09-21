@@ -142,7 +142,7 @@ const LandingHeader = ({ onBookRequest, selectedLocation = null, onLocationChang
               >
                 <img
                   src="/images/logo.png"
-                  alt="ActiveRehab Centre Logo"
+                  alt="ActiveRehab Centre"
                   width="190"
                   height="44"
                   className={`w-auto object-contain transition-all duration-200 ${
