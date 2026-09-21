@@ -11,7 +11,13 @@ const WhatsAppIcon = ({ className }) => (
   </svg>
 );
 
-const HeroSection = ({ onBookRequest, selectedLocation = null, onLocationChange }) => {
+const HeroSection = ({ 
+  onBookRequest, 
+  selectedLocation = null, 
+  onLocationChange,
+  selectedConcern = '',
+  onConcernChange
+}) => {
   const scrollToContact = (e) => {
     e.preventDefault();
     const element = document.getElementById('contact');
@@ -35,21 +41,38 @@ const HeroSection = ({ onBookRequest, selectedLocation = null, onLocationChange 
     <section
       id="home"
       className="relative bg-slate-950 overflow-hidden"
-      style={{ paddingTop: '4.5rem' /* below fixed header */ }}
     >
+      {/* ── Reduced-motion: hide video, keep static dark bg ── */}
       <style>{`
         @media (prefers-reduced-motion: reduce) {
           #hero-bg-video { display: none !important; }
         }
       `}</style>
 
-      {/* Decorative Video Background */}
+      {/*
+        HERO BACKGROUND VIDEO
+        ─────────────────────
+        Boundary: starts at top of this <section> (below fixed header via paddingTop).
+        Ends at </section>. position: fixed is NEVER used.
+
+        CLARITY FIX:
+        ─────────────────────────────────────────────────────────────────
+        Previous state:  opacity 0.28 × overlay 0.82–0.92 → ~5% visible (buried)
+        New state:       opacity 0.65 + CSS filter boost → ~35–45% visible
+        Strategy:        3-zone gradient overlay instead of uniform dark blanket
+          Left  (0–35%)  : 88% dark  — headline readability
+          Center (35–60%): 55% dark  — video breathes through here
+          Right (60–100%): 78% dark  — form stays dominant
+        Plus a localized radial shadow only under the text block for safety.
+        ─────────────────────────────────────────────────────────────────
+      */}
       <div
         id="hero-bg-video"
         className="absolute inset-0 z-0"
         aria-hidden="true"
         style={{ pointerEvents: 'none' }}
       >
+        {/* ── Video ── */}
         <video
           autoPlay
           muted
@@ -58,12 +81,78 @@ const HeroSection = ({ onBookRequest, selectedLocation = null, onLocationChange 
           preload="metadata"
           disablePictureInPicture
           disableRemotePlayback
-          className="w-full h-full object-cover opacity-20"
-          style={{ pointerEvents: 'none' }}
+          className="w-full h-full object-cover"
+          style={{
+            pointerEvents: 'none',
+            // Raised from 0.28 → 0.65 for meaningful visual presence
+            opacity: 0.65,
+            objectPosition: 'center center',
+            // Subtle filter to punch up footage without altering color mood:
+            // brightness lifts mid-tones, contrast separates subject from bg,
+            // saturate makes the chiropractic visual more identifiable
+            filter: 'brightness(1.2) contrast(1.08) saturate(1.15)',
+          }}
         >
-          <source src="/images/herobg.mp4" type="video/mp4" />
+          <source src="/Activerehab Overaly Background Video.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/85 to-slate-900/80" />
+
+        {/*
+          ── Smart 3-Zone Gradient Overlay ──
+          Replaces the old flat 82–92% dark blanket.
+
+          Zone 1 (left, 0–35%):   rgba(2,6,23,0.88) — strong coverage for H1
+          Zone 2 (center, 35–60%): rgba(2,6,23,0.52) — video breathes here
+          Zone 3 (right, 60–100%): rgba(2,6,23,0.78) — form remains dominant
+
+          This gives the CENTER the visibility window the user wants
+          while protecting the left headline zone and right form zone.
+        */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(100deg,' +
+              'rgba(2,6,23,0.88) 0%,' +     /* left — headline protection */
+              'rgba(2,6,23,0.88) 28%,' +    /* still dark up to where copy ends */
+              'rgba(2,6,23,0.52) 50%,' +    /* center breathing zone — video visible */
+              'rgba(2,6,23,0.70) 65%,' +    /* transition toward form */
+              'rgba(2,6,23,0.80) 100%)',    /* right — form protection */
+          }}
+        />
+
+        {/*
+          ── Text-Zone Radial Shadow (localized) ──
+          A soft dark pool directly behind the headline block only.
+          This means we do NOT need to darken the entire hero for text safety —
+          only the exact area behind H1, copy, and CTAs gets extra protection.
+          Positioned: left 0 to ~50% wide, full height.
+        */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 65% 90% at 15% 55%,' +
+              'rgba(2,6,23,0.45) 0%,' +
+              'rgba(2,6,23,0.0) 100%)',
+          }}
+        />
+
+        {/*
+          ── Bottom-edge Vignette (cinematic tonal fade) ──
+          A very narrow (~80px) gradient at the BOTTOM of the hero only.
+          Fades from transparent → the same slate-900 colour that the
+          trust strip uses as its background.
+          This sits INSIDE <HeroSection>, so the video does not bleed
+          into the trust strip — it just prevents the hard cut look.
+        */}
+        <div
+          className="absolute inset-x-0 bottom-0"
+          style={{
+            height: '80px',
+            background: 'linear-gradient(to bottom, rgba(15,23,42,0) 0%, rgba(15,23,42,1) 100%)',
+            pointerEvents: 'none',
+          }}
+        />
       </div>
 
       {/* ──────────────────────────────
@@ -163,7 +252,7 @@ const HeroSection = ({ onBookRequest, selectedLocation = null, onLocationChange 
         </div>
 
         {/* Mobile Primary CTAs */}
-        <div className="flex flex-col gap-2 mb-4">
+        <div className="flex flex-col gap-2">
           <button
             type="button"
             onClick={onBookRequest}
@@ -193,22 +282,6 @@ const HeroSection = ({ onBookRequest, selectedLocation = null, onLocationChange 
               <WhatsAppIcon className="w-3.5 h-3.5" />
               <span>WhatsApp</span>
             </a>
-          </div>
-        </div>
-
-        {/* 3 Verified Trust Badges */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="flex flex-col items-center bg-white/5 border border-white/10 px-2 py-2 rounded-xl text-center">
-            <Award className="w-4 h-4 text-brandOrange mb-1" />
-            <span className="text-[10px] font-bold text-white leading-tight">17+ Yrs Exp.</span>
-          </div>
-          <div className="flex flex-col items-center bg-white/5 border border-white/10 px-2 py-2 rounded-xl text-center">
-            <MapPin className="w-4 h-4 text-brandOrange mb-1" />
-            <span className="text-[10px] font-bold text-white leading-tight">2 Hyd Clinics</span>
-          </div>
-          <div className="flex flex-col items-center bg-white/5 border border-white/10 px-2 py-2 rounded-xl text-center">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 mb-1" />
-            <span className="text-[10px] font-bold text-white leading-tight">Personalized</span>
           </div>
         </div>
       </div>
@@ -360,7 +433,8 @@ const HeroSection = ({ onBookRequest, selectedLocation = null, onLocationChange 
 
             {/* Right Column — Appointment Form */}
             <motion.div
-              className="lg:col-span-5 w-full"
+              id="contact"
+              className="lg:col-span-5 w-full scroll-mt-24"
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
@@ -370,6 +444,8 @@ const HeroSection = ({ onBookRequest, selectedLocation = null, onLocationChange 
                 subtitle="Schedule your spine &amp; joint consultation"
                 selectedLocation={selectedLocation || 'kondapur'}
                 onLocationChange={onLocationChange}
+                initialConcern={selectedConcern}
+                onConcernChange={onConcernChange}
               />
             </motion.div>
           </div>

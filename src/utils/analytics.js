@@ -95,3 +95,56 @@ export const trackBookAppointmentClick = (source = 'hero', location = 'general')
   }
 };
 
+// ─── Video Testimonial Carousel Analytics ──────────────────────────────────────
+// Note: Automatic 5-second previews are engagement events, NOT lead conversions.
+
+export const trackVideoTestimonialEvent = (eventName, params = {}) => {
+  try {
+    if (typeof window !== 'undefined' && Array.isArray(window.dataLayer)) {
+      window.dataLayer.push({
+        event: eventName,
+        ...params
+      });
+    }
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('event', eventName, params);
+    }
+  } catch (err) {
+    console.warn(`Video testimonial tracking error (${eventName}):`, err);
+  }
+};
+
+export const trackVideoPreview = ({ videoId, videoIndex, selectedLocation = 'kondapur' }) => {
+  trackVideoTestimonialEvent('video_testimonial_preview', {
+    video_id: videoId,
+    video_index: videoIndex,
+    clinic_location: selectedLocation
+  });
+};
+
+export const trackVideoFullPlay = ({ videoId, videoIndex, selectedLocation = 'kondapur' }) => {
+  trackVideoTestimonialEvent('video_testimonial_full_play', {
+    video_id: videoId,
+    video_index: videoIndex,
+    clinic_location: selectedLocation
+  });
+};
+
+export const trackVideoNext = ({ videoId, videoIndex, selectedLocation = 'kondapur', method = 'auto' }) => {
+  trackVideoTestimonialEvent('video_testimonial_next', {
+    video_id: videoId,
+    video_index: videoIndex,
+    clinic_location: selectedLocation,
+    advance_method: method // 'auto' | 'swipe' | 'arrow' | 'dot'
+  });
+};
+
+export const trackVideoYouTubeClick = ({ videoId, videoIndex, selectedLocation = 'kondapur' }) => {
+  trackVideoTestimonialEvent('video_testimonial_youtube_click', {
+    video_id: videoId,
+    video_index: videoIndex,
+    clinic_location: selectedLocation
+  });
+};
+
+

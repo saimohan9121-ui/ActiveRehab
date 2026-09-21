@@ -8,6 +8,7 @@ import {
   Calendar, 
   User, 
   Phone, 
+  Mail,
   Activity, 
   MapPin, 
   ShieldCheck, 
@@ -28,17 +29,19 @@ const MobileBookingModal = ({
   isOpen, 
   onClose, 
   selectedLocation = 'kondapur', 
-  onLocationChange 
+  onLocationChange,
+  initialConcern = '',
 }) => {
   const navigate = useNavigate();
   const formRef = useRef();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
+    preferred_location: selectedLocation || 'kondapur',
     user_name: '',
     user_phone: '',
-    preferred_location: selectedLocation || 'kondapur',
-    user_concern: 'Back Pain / Lower Back Care',
+    user_concern: initialConcern || 'Back Pain',
     user_location: '',
+    user_email: '',
   });
 
   // Sync preferred_location when parent selectedLocation changes
@@ -47,6 +50,13 @@ const MobileBookingModal = ({
       setFormData(prev => ({ ...prev, preferred_location: selectedLocation }));
     }
   }, [selectedLocation]);
+
+  // Sync user_concern when initialConcern prop changes (e.g., different card tapped)
+  useEffect(() => {
+    if (initialConcern) {
+      setFormData(prev => ({ ...prev, user_concern: initialConcern }));
+    }
+  }, [initialConcern]);
 
   // Lock body scroll and listen for Escape key when modal is open
   useEffect(() => {
@@ -74,15 +84,46 @@ const MobileBookingModal = ({
     }
   };
 
+  const validatePhone = (phone) => {
+    if (!phone || !phone.trim()) return false;
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length === 10) return /^[6-9]\d{9}$/.test(digits);
+    if (digits.length === 11 && digits.startsWith('0')) return /^[6-9]\d{9}$/.test(digits.slice(1));
+    if (digits.length === 12 && digits.startsWith('91')) return /^[6-9]\d{9}$/.test(digits.slice(2));
+    return digits.length >= 10;
+  };
+
+  const validateEmail = (email) => {
+    if (!email || !email.trim()) return false;
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.trim());
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.user_name.trim()) {
+    if (!formData.preferred_location) {
+      toast.error('Please select a clinic.');
+      return;
+    }
+    if (!formData.user_name || !formData.user_name.trim()) {
       toast.error('Please enter your name.');
       return;
     }
-    if (!formData.user_phone.trim() || formData.user_phone.length < 8) {
-      toast.error('Please enter a valid phone number.');
+    if (!formData.user_phone || !formData.user_phone.trim() || !validatePhone(formData.user_phone)) {
+      toast.error('Please enter a valid mobile number.');
+      return;
+    }
+    if (!formData.user_concern || !formData.user_concern.trim()) {
+      toast.error('Please select your main concern.');
+      return;
+    }
+    if (!formData.user_location || !formData.user_location.trim()) {
+      toast.error('Please enter your area or locality.');
+      return;
+    }
+    if (!formData.user_email || !formData.user_email.trim() || !validateEmail(formData.user_email)) {
+      toast.error('Please enter a valid email address.');
       return;
     }
 
@@ -93,16 +134,33 @@ const MobileBookingModal = ({
       ? 'ActiveRehab Kompally' 
       : 'ActiveRehab Kondapur';
 
+    const cleanName = formData.user_name.trim();
+    const cleanPhone = formData.user_phone.trim();
+    const cleanLocality = formData.user_location.trim();
+    const cleanEmail = formData.user_email.trim();
+
     const emailParams = {
-      user_name: formData.user_name,
-      user_phone: formData.user_phone,
+      user_name: cleanName,
+      name: cleanName,
+      user_phone: cleanPhone,
+      phone: cleanPhone,
+      user_email: cleanEmail,
+      email: cleanEmail,
       preferred_location: branchName,
+      preferredLocation: branchName,
       user_concern: formData.user_concern,
-      user_location: formData.user_location || `${branchName} Area`,
-      message: `Preferred Clinic: ${branchName} | Concern: ${formData.user_concern} (Mobile Modal Booking)`,
+      mainConcern: formData.user_concern,
+      user_location: cleanLocality,
+      locality: cleanLocality,
+      message: `Preferred Clinic: ${branchName} | Concern: ${formData.user_concern} | Locality: ${cleanLocality} | Email: ${cleanEmail} (Mobile Modal Booking)`,
       gclid: attribution.gclid || 'Direct/Organic',
+      gbraid: attribution.gbraid || '',
+      wbraid: attribution.wbraid || '',
       utm_source: attribution.utm_source || 'google_ads',
+      utm_medium: attribution.utm_medium || 'cpc',
       utm_campaign: attribution.utm_campaign || `chiropractor_${formData.preferred_location}`,
+      utm_term: attribution.utm_term || '',
+      utm_content: attribution.utm_content || '',
     };
 
     emailjs
@@ -116,10 +174,17 @@ const MobileBookingModal = ({
         setIsSubmitting(false);
         trackFormSubmitSuccess({ 
           ...formData, 
+          name: cleanName,
+          phone: cleanPhone,
+          locality: cleanLocality,
+          email: cleanEmail,
+          preferredLocation: formData.preferred_location,
           preferred_location: formData.preferred_location,
+          mainConcern: formData.user_concern,
+          user_concern: formData.user_concern,
           source: 'mobile_modal' 
         });
-        toast.success('Appointment request received!');
+        toast.success('Callback request received successfully!');
         onClose();
         navigate('/thank-you');
       })
@@ -148,7 +213,7 @@ const MobileBookingModal = ({
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="Book Appointment"
+            aria-label="Request Callback"
             className="fixed bottom-0 left-0 right-0 z-[61] md:hidden bg-slate-900 rounded-t-3xl border-t border-slate-700 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
@@ -167,14 +232,14 @@ const MobileBookingModal = ({
             <div className="flex items-center justify-between px-5 pt-1 pb-3 border-b border-slate-800">
               <div className="text-left">
                 <div className="flex items-center space-x-2">
-                  <Calendar className="w-5 h-5 text-brandOrange" />
+                  <Calendar className="w-5 h-5 text-brandOrange flex-shrink-0" />
                   <h2 className="text-lg font-black text-white leading-tight">
-                    Book Your Appointment
+                    Request Callback
                   </h2>
                 </div>
                 <p className="text-xs text-slate-300 font-semibold flex items-center mt-0.5">
-                  <Award className="w-3.5 h-3.5 text-brandOrange mr-1" />
-                  Dr. Ashok P. Kota (17+ Yrs Exp) · Hyderabad
+                  <Award className="w-3.5 h-3.5 text-brandOrange mr-1 flex-shrink-0" />
+                  Schedule your spine &amp; joint consultation
                 </p>
               </div>
               <button
@@ -188,12 +253,12 @@ const MobileBookingModal = ({
 
             {/* Form Body with Smooth Scroll */}
             <div className="overflow-y-auto px-5 py-4 space-y-3.5 text-left">
-              <form ref={formRef} onSubmit={handleSubmit} className="space-y-3">
-                {/* Preferred Location Switcher */}
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-3" noValidate={false}>
+                {/* 1. Preferred Clinic Location * */}
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-1">
-                    <MapPin className="w-3 h-3 text-brandOrange" />
-                    <span>Select Clinic Location <span className="text-brandOrange">*</span></span>
+                  <label htmlFor="modal_preferred_location" className="text-[11px] font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-1">
+                    <MapPin className="w-3 h-3 text-brandOrange flex-shrink-0" />
+                    <span>Preferred Clinic Location <span className="text-brandOrange">*</span></span>
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
@@ -202,7 +267,7 @@ const MobileBookingModal = ({
                         setFormData(prev => ({ ...prev, preferred_location: 'kondapur' }));
                         if (onLocationChange) onLocationChange('kondapur');
                       }}
-                      className={`py-2 px-2.5 rounded-xl font-bold text-xs border transition-all flex items-center justify-center space-x-1 cursor-pointer ${
+                      className={`min-h-[44px] py-2 px-2.5 rounded-xl font-bold text-xs border transition-all flex items-center justify-center space-x-1 cursor-pointer ${
                         formData.preferred_location === 'kondapur'
                           ? 'bg-brandOrange text-white border-brandOrange shadow-md'
                           : 'bg-white/10 text-slate-300 border-white/15'
@@ -217,7 +282,7 @@ const MobileBookingModal = ({
                         setFormData(prev => ({ ...prev, preferred_location: 'kompally' }));
                         if (onLocationChange) onLocationChange('kompally');
                       }}
-                      className={`py-2 px-2.5 rounded-xl font-bold text-xs border transition-all flex items-center justify-center space-x-1 cursor-pointer ${
+                      className={`min-h-[44px] py-2 px-2.5 rounded-xl font-bold text-xs border transition-all flex items-center justify-center space-x-1 cursor-pointer ${
                         formData.preferred_location === 'kompally'
                           ? 'bg-brandOrange text-white border-brandOrange shadow-md'
                           : 'bg-white/10 text-slate-300 border-white/15'
@@ -226,12 +291,20 @@ const MobileBookingModal = ({
                       <span>Kompally Clinic</span>
                     </button>
                   </div>
+                  <input
+                    type="hidden"
+                    id="modal_preferred_location"
+                    name="preferred_location"
+                    value={formData.preferred_location}
+                    required
+                    aria-required="true"
+                  />
                 </div>
 
-                {/* Patient Name */}
+                {/* 2. Patient Name * */}
                 <div className="space-y-1">
                   <label htmlFor="modal_user_name" className="text-[11px] font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-1">
-                    <User className="w-3 h-3 text-brandOrange" />
+                    <User className="w-3 h-3 text-brandOrange flex-shrink-0" />
                     <span>Patient Name <span className="text-brandOrange">*</span></span>
                   </label>
                   <div className="relative">
@@ -239,20 +312,22 @@ const MobileBookingModal = ({
                       id="modal_user_name"
                       type="text"
                       name="user_name"
+                      autoComplete="name"
                       required
+                      aria-required="true"
                       value={formData.user_name}
                       onChange={handleChange}
-                      placeholder="e.g. Rahul Sharma"
-                      className="w-full px-3.5 py-2.5 pl-10 rounded-xl bg-white/10 border border-white/20 focus:border-brandOrange text-white font-medium placeholder:text-slate-400 outline-none text-base"
+                      placeholder="Salaar Devaratha Raisaar"
+                      className="w-full min-h-[46px] px-3.5 py-2.5 pl-10 rounded-xl bg-white/10 border border-white/20 focus:border-brandOrange text-white font-medium placeholder:text-slate-400 outline-none text-base"
                     />
                     <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
                 </div>
 
-                {/* Mobile Number */}
+                {/* 3. Mobile Number * */}
                 <div className="space-y-1">
                   <label htmlFor="modal_user_phone" className="text-[11px] font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-1">
-                    <Phone className="w-3 h-3 text-brandOrange" />
+                    <Phone className="w-3 h-3 text-brandOrange flex-shrink-0" />
                     <span>Mobile Number <span className="text-brandOrange">*</span></span>
                   </label>
                   <div className="relative">
@@ -260,36 +335,42 @@ const MobileBookingModal = ({
                       id="modal_user_phone"
                       type="tel"
                       name="user_phone"
+                      autoComplete="tel"
+                      inputMode="tel"
                       required
+                      aria-required="true"
                       value={formData.user_phone}
                       onChange={handleChange}
                       placeholder="+91 98765 43210"
-                      className="w-full px-3.5 py-2.5 pl-10 rounded-xl bg-white/10 border border-white/20 focus:border-brandOrange text-white font-medium placeholder:text-slate-400 outline-none text-base"
+                      className="w-full min-h-[46px] px-3.5 py-2.5 pl-10 rounded-xl bg-white/10 border border-white/20 focus:border-brandOrange text-white font-medium placeholder:text-slate-400 outline-none text-base"
                     />
                     <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
                 </div>
 
-                {/* Concern */}
+                {/* 4. Main Concern / Health Issue * */}
                 <div className="space-y-1">
                   <label htmlFor="modal_user_concern" className="text-[11px] font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-1">
-                    <Activity className="w-3 h-3 text-brandOrange" />
-                    <span>Main Concern <span className="text-brandOrange">*</span></span>
+                    <Activity className="w-3 h-3 text-brandOrange flex-shrink-0" />
+                    <span>Main Concern / Health Issue <span className="text-brandOrange">*</span></span>
                   </label>
                   <div className="relative">
                     <select
                       id="modal_user_concern"
                       name="user_concern"
+                      required
+                      aria-required="true"
                       value={formData.user_concern}
                       onChange={handleChange}
-                      className="w-full px-3.5 py-2.5 pl-10 rounded-xl bg-slate-800 border border-white/20 focus:border-brandOrange text-white font-medium outline-none text-base appearance-none cursor-pointer"
+                      className="w-full min-h-[46px] px-3.5 py-2.5 pl-10 pr-8 rounded-xl bg-slate-800 border border-white/20 focus:border-brandOrange text-white font-medium outline-none text-base appearance-none cursor-pointer"
                     >
-                      <option value="Back Pain / Lower Back Care">Back Pain / Lower Back Care</option>
-                      <option value="Sciatica & Nerve Pain">Sciatica &amp; Nerve Pain</option>
-                      <option value="Neck Pain & Cervical Care">Neck Pain &amp; Cervical Care</option>
-                      <option value="Spondylitis & Spine Stiffness">Spondylitis &amp; Spine Stiffness</option>
+                      <option value="Back Pain">Back Pain</option>
+                      <option value="Neck Pain">Neck Pain</option>
+                      <option value="Sciatica & Sciatic Nerve Pain">Sciatica &amp; Sciatic Nerve Pain</option>
+                      <option value="Spondylitis & Inflammatory Spine Conditions">Spondylitis &amp; Inflammatory Spine Conditions</option>
+                      <option value="Cervical Spondylosis & Neck Pain">Cervical Spondylosis &amp; Neck Pain</option>
+                      <option value="Postural Disorders & Posture-Related Pain">Postural Disorders &amp; Posture-Related Pain</option>
                       <option value="Headaches & Tension Relief">Headaches &amp; Tension Relief</option>
-                      <option value="Posture Correction & Alignment">Posture Correction &amp; Alignment</option>
                       <option value="Joint Pain (Shoulder, Knee, Hip)">Joint Pain (Shoulder, Knee, Hip)</option>
                       <option value="Other Condition">Other Condition</option>
                     </select>
@@ -298,23 +379,48 @@ const MobileBookingModal = ({
                   </div>
                 </div>
 
-                {/* Area / Locality */}
+                {/* 5. Your Area / Locality * */}
                 <div className="space-y-1">
                   <label htmlFor="modal_user_location" className="text-[11px] font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-1">
-                    <MapPin className="w-3 h-3 text-brandOrange" />
-                    <span>Your Area <span className="text-slate-400 font-normal lowercase">(optional)</span></span>
+                    <MapPin className="w-3 h-3 text-brandOrange flex-shrink-0" />
+                    <span>Your Area / Locality <span className="text-brandOrange">*</span></span>
                   </label>
                   <div className="relative">
                     <input
                       id="modal_user_location"
                       type="text"
                       name="user_location"
+                      required
+                      aria-required="true"
                       value={formData.user_location}
                       onChange={handleChange}
-                      placeholder="e.g. Kondapur, Gachibowli, Kompally"
-                      className="w-full px-3.5 py-2.5 pl-10 rounded-xl bg-white/10 border border-white/20 focus:border-brandOrange text-white font-medium placeholder:text-slate-400 outline-none text-base"
+                      placeholder="e.g. Kondapur, Gachibowli, Kompally, Suchitra, Khansaar"
+                      className="w-full min-h-[46px] px-3.5 py-2.5 pl-10 rounded-xl bg-white/10 border border-white/20 focus:border-brandOrange text-white font-medium placeholder:text-slate-400 outline-none text-base"
                     />
                     <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* 6. Email Address * (Directly below Your Area / Locality) */}
+                <div className="space-y-1">
+                  <label htmlFor="modal_user_email" className="text-[11px] font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-1">
+                    <Mail className="w-3 h-3 text-brandOrange flex-shrink-0" />
+                    <span>Email Address <span className="text-brandOrange">*</span></span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="modal_user_email"
+                      type="email"
+                      name="user_email"
+                      autoComplete="email"
+                      required
+                      aria-required="true"
+                      value={formData.user_email}
+                      onChange={handleChange}
+                      placeholder="Shouryaanga@Salaar.@gmail.com"
+                      className="w-full min-h-[46px] px-3.5 py-2.5 pl-10 rounded-xl bg-white/10 border border-white/20 focus:border-brandOrange text-white font-medium placeholder:text-slate-400 outline-none text-base"
+                    />
+                    <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
                 </div>
 
@@ -322,13 +428,13 @@ const MobileBookingModal = ({
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full py-3.5 rounded-xl font-extrabold text-base tracking-wider uppercase text-white bg-gradient-to-r from-brandOrange to-amber-500 shadow-xl shadow-brandOrange/30 flex items-center justify-center space-x-2 mt-2 cursor-pointer ${
+                  className={`w-full min-h-[48px] py-3.5 rounded-xl font-extrabold text-base tracking-wider uppercase text-white bg-gradient-to-r from-brandOrange via-orange-500 to-amber-500 hover:from-orange-600 hover:to-brandOrange shadow-xl shadow-brandOrange/30 flex items-center justify-center space-x-2 mt-2 cursor-pointer ${
                     isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
                   }`}
                   whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                 >
                   <Sparkles className="w-4 h-4 text-amber-200 animate-pulse" />
-                  <span>{isSubmitting ? 'Submitting...' : 'CONFIRM APPOINTMENT'}</span>
+                  <span>{isSubmitting ? 'Requesting Callback...' : 'REQUEST CALLBACK'}</span>
                   {!isSubmitting && <ArrowRight className="w-4 h-4" />}
                 </motion.button>
               </form>
